@@ -35,21 +35,22 @@ class App extends React.Component {
         super(props)
         this.state = {
         }
-        this.myRef = React.createRef();
+        this.sbRef = React.createRef();
     }
 
     render() {
         return (
             <React.Fragment>
-                <div align="center" style={{ width: '100%' }}>
-                    <div id='chart' style={{ width: 800 }} ref={this.myRef}></div>
+                <div align="center" style={{ width: '100%', backgroundColor: '#2A2C34' }}>
+                    <div id='chart' style={{ width: 800 }} ref={this.sbRef}></div>
                 </div>
             </React.Fragment>
         );
     }
 
     sunburstChart = (dataset) => {
-        const color = d3.scaleOrdinal(d3.quantize(d3.interpolateRainbow, dataset.children.length + 1))
+        const format = d3.format(",d")
+        const color = d3.scaleOrdinal(d3.schemePastel1)
         const root = partition(dataset);
 
         //on click
@@ -64,6 +65,8 @@ class App extends React.Component {
                 y1: Math.max(0, d.y1 - p.depth)
             });
 
+            parentLabel.text(p.data.name).style('fill', 'white')
+
             const t = svg.transition().duration(750);
 
             path.transition(t)
@@ -74,13 +77,20 @@ class App extends React.Component {
                 .filter(function (d) {
                     return +this.getAttribute("fill-opacity") || arcVisible(d.target);
                 })
-                .attr("fill-opacity", d => arcVisible(d.target) ? (d.children ? 0.6 : 0.4) : 0)
+                .attr("fill-opacity", d => arcVisible(d.target) ? (d.children ? 0.9 : 0.4) : 0)
                 .attrTween("d", d => () => arc(d.current));
 
             label.filter(function (d) {
                 return +this.getAttribute("fill-opacity") || labelVisible(d.target);
             }).transition(t)
                 .attr("fill-opacity", d => +labelVisible(d.target))
+                .attrTween("transform", d => () => labelTransform(d.current));
+
+
+            icon.transition(t)
+                .attr("fill-opacity", d => {
+                    return +(labelVisible(d.target) && Boolean(d.data.errorexist))
+                })
                 .attrTween("transform", d => () => labelTransform(d.current));
         }
 
@@ -92,7 +102,7 @@ class App extends React.Component {
             .innerRadius(d => d.y0 * radius)
             .outerRadius(d => Math.max(d.y0 * radius, d.y1 * radius - 1))
 
-        const svg = d3.select(this.myRef.current).append("svg")
+        const svg = d3.select(this.sbRef.current).append("svg")
             .attr('id', 'sunburst')
             .attr("viewBox", [0, 0, width, width])
             .style("font", "10px sans-serif")
@@ -100,25 +110,9 @@ class App extends React.Component {
             .attr("transform", `translate(${width / 2},${width / 2})`)
 
         /**********
-        * Label*
-        **********/
-        const label = svg.append("g")
-            .attr("pointer-events", "none")
-            .attr("text-anchor", "middle")
-            .style("user-select", "none")
-            .selectAll("text")
-            .data(root.descendants().slice(1))
-            .join("text")
-            .attr("dy", "0.35em")
-            .attr("fill-opacity", d => +labelVisible(d))
-            .attr("transform", d => labelTransform(d))
-            .text(d => d.data.name.substring(0, 14) + (d.data.name.length > 14 ? '...' : ''))
-            .style('font-size', 14);
-
-        /**********
          * Tooltip*
          **********/
-        var tooltip = d3.select(this.myRef.current)
+        var tooltip = d3.select(this.sbRef.current)
             .append("div")
             .style("position", "absolute")
             .style("visibility", "hidden")
@@ -127,36 +121,86 @@ class App extends React.Component {
             .style("border-width", "1px")
             .style("border-radius", "5px")
             .style("padding", "10px")
-            .html("<p>I'm a tooltip written in HTML</p><img src='https://github.com/holtzy/D3-graph-gallery/blob/master/img/section/ArcSmal.png?raw=true'></img><br>Fancy<br><span style='font-size: 40px;'>Isn't it?</span>");
 
         const path = svg.append("g")
             .selectAll("path")
             .data(root.descendants().slice(1))
             .join("path")
             .attr("fill", d => {
-                if (d.parent.data.color) {
-                    d.data.color = d.parent.data.color;
+                let data = d.data
+                let value = color(data.name)
+                if (data.color) {
+                    value = data.color;
                 }
-                return d.data.color ? d.data.color : color(d.data.name);
+                return value;
             })
-            .attr("fill-opacity", d => arcVisible(d) ? (d.children ? 0.6 : 0.4) : 0)
+            .attr("fill-opacity", d => arcVisible(d) ? (d.children ? 0.8 : 0.4) : 0)
             .attr("d", d => arc(d));
 
         path.filter(d => d.children)
             .style("cursor", "pointer")
-            .on('click', clicked)
-            .on("mouseover", function (e, d) { 
-                return tooltip.style("visibility", "visible"); 
-            })
+            .on('click', clicked);
+        path.on("mouseover", function (e, d) {
+            if (d.children || d.data.error) {
+                tooltip.html(() => {
+                    return `<div style="font-size:10px;">
+                    <p>${d.children ? 'Count: ' + format(d.children.length) : ''}</p>
+                    <p>${d.data.error ? 'Error: ' + d.data.error : ''}</p>
+                    </div>`
+                });
+                tooltip.style("visibility", "visible");
+            }
+        })
             .on("mousemove", function (e, d) { return tooltip.style("top", (e.pageY + 20) + "px").style("left", (e.pageX + 20) + "px"); })
             .on("mouseout", function (e, d) { return tooltip.style("visibility", "hidden"); });
+
+        /**********
+       * Label*
+       **********/
+
+        const labelData = svg.append("g")
+            .attr("pointer-events", "none")
+            .attr("text-anchor", "middle")
+            .style("user-select", "none")
+            .selectAll("text")
+            .data(root.descendants().slice(1))
+
+        const label = labelData
+            .join("text")
+            .attr("dy", "0.35em")
+            .attr("fill-opacity", d => +labelVisible(d))
+            .attr("transform", d => labelTransform(d))
+            .text(d => d.data.name.substring(0, 14) + (d.data.name.length > 14 ? '...' : ''))
+            .style('font-size', 14)
+            .style('fill', 'white')
+
+        const icon = labelData
+            .join("text")
+            .attr("dy", "-0.5em")
+            .attr("dx", "-1.9em")
+            .attr("fill-opacity", d => +(labelVisible(d) && Boolean(d.data.errorexist)))
+            .attr("transform", d => labelTransform(d))
+            .style('font-family', 'Linearicons-Free')
+            .attr('font-size', '20px')
+            .text('\ue880')
+            .attr('x', 40)
+            .attr('y', 40)
+            .attr("fill", "red");
+
 
         const parent = svg.append("circle")
             .datum(root)
             .attr("r", radius)
             .attr("fill", "none")
             .attr("pointer-events", "all")
-            .on("click", clicked);
+            .on("click", clicked)
+
+        const parentLabel = svg.append("text")
+            .attr("class", "total")
+            .attr("text-anchor", "middle")
+            .attr('font-size', '3em')
+            .attr('y', 12)
+            .attr('x', 1)
     }
 
     onSwap = (data) => {
@@ -167,7 +211,7 @@ class App extends React.Component {
     }
 
     sequenceChart = (sequence) => {
-        d3.select(this.myRef.current).append('g').attr("id", "sequence")
+        d3.select(this.sbRef.current).append('g').attr("id", "sequence")
         initialize((140 * sequence.length));
         updateElements(sequence, this.onSwap);
     }

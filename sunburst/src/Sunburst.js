@@ -120,12 +120,12 @@ class App extends React.Component {
                     //         .duration(200)
                     //         .style("opacity", d => sequenceArray.indexOf(d) >= 0 ? 1 : 0.3);
                     // })
-                    // .on('mouseleave', function (e, d) {
-                    //     svg.selectAll("path")
-                    //         .transition()
-                    //         .duration(200)
-                    //         .style("opacity", 1);
-                    // })
+                        // .on('mouseleave', function (e, d) {
+                        //     svg.selectAll("path")
+                        //         .transition()
+                        //         .duration(200)
+                        //         .style("opacity", 1);
+                        // })
 
                 path.append("title")
                     .text(d => `${d.ancestors().map(d => d.data.name).reverse().join("/")}\n${format(d.value)}`);

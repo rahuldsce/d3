@@ -108,7 +108,6 @@ export const updateSequence = (data) => {
   entering.call(d3.drag().on('start', (e, d) => {
 
   }).on('drag', (e, d) => {
-    console.log(dragging)
     entering.filter((d1) => { return d1 == d }).raise().attr("transform", "translate(" + e.x + "," + 0 + ")");
   }).on('end', (e, d) => {
 

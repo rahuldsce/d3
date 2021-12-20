@@ -1,52 +1,121 @@
 [
     {
-        "region":"EU",
-        "cloudletName":"Demo4",
-        "operatorName":"TDG",
-        "cloudletStatus":"Ready"
+        "region": {
+            "name": "EU"
+        },
+        "cloudlet": {
+            "name": "Demo4"
+        },
+        "operator": {
+            "name": "TDG"
+        },
+        "cloudletStatus": {
+            "name": "Ready"
+        }
     },
     {
-        "region":"EU",
-        "cloudletName":"automationDusseldorfCloudlet",
-        "operatorName":"TDG",
-        "cloudletStatus":"Maintainance"
+        "region": {
+            "name": "EU"
+        },
+        "cloudlet": {
+            "name": "automationDusseldorfCloudlet"
+        },
+        "operator": {
+            "name": "TDG"
+        },
+        "cloudletStatus": {
+            "name": "Maintainance"
+        }
     },
     {
-        "region":"EU",
-        "cloudletName":"automationMunichCloudlet",
-        "operatorName":"TDG",
-        "cloudletStatus":"Delete"
+        "region": {
+            "name": "EU"
+        },
+        "cloudlet": {
+            "name": "automationMunichCloudlet"
+        },
+        "operator": {
+            "name": "TDG"
+        },
+        "cloudletStatus": {
+            "name": "Delete"
+        }
     },
     {
-        "region":"EU",
-        "cloudletName":"kafka_test_cloudlet",
-        "operatorName":"TDG",
-        "cloudletStatus":"Ready"
+        "region": {
+            "name": "EU"
+        },
+        "cloudlet": {
+            "name": "kafka_test_cloudlet"
+        },
+        "operator": {
+            "name": "TDG"
+        },
+        "cloudletStatus": {
+            "name": "Ready"
+        }
     },
     {
-        "region":"EU",
-        "cloudletName":"kafka_test_cloudlet2",
-        "operatorName":"TDG",
-        "cloudletStatus":"Maintainance"
+        "region": {
+            "name": "EU"
+        },
+        "cloudlet": {
+            "name": "kafka_test_cloudlet2"
+        },
+        "operator": {
+            "name": "TDG"
+        },
+        "cloudletStatus": {
+            "name": "Maintainance"
+        }
     },
     {
-        "region":"EU",
-        "cloudletName":"testreportgpu",
-        "operatorName":"reportorg1",
-        "cloudletStatus":"Ready"
+        "region": {
+            "name": "EU"
+        },
+        "cloudlet": {
+            "name": "testreportgpu"
+        },
+        "operator": {
+            "name": "reportorg1"
+        },
+        "cloudletStatus": {
+            "name": "Ready"
+        }
     },
     {
-        "region":"US",
-        "cloudletName":"testreportgpu",
-        "operatorName":"reportorg1",
-        "cloudletStatus":"Ready"
+        "region": {
+            "name": "US"
+        },
+        "cloudlet": {
+            "name": "testreportgpu"
+        },
+        "operator": {
+            "name": "reportorg1"
+        },
+        "cloudletStatus": {
+            "name": "Ready"
+        }
     },
     {
-        "region":"US",
-        "cloudletName":"testgpu",
-        "operatorName":"reportorg3",
-        "cloudletStatus":"Delete",
-        "appname":"testtdg",
-        "clustername":"testcluster"
+        "region": {
+            "name": "US"
+        },
+        "cloudlet": {
+            "name": "testgpu"
+        },
+        "operator": {
+            "name": "reportorg3"
+        },
+        "cloudletStatus": {
+            "name": "Delete"
+        },
+        "app": {
+            "name": "testtdg",
+            "error":"health issue"
+        },
+        "cluster": {
+            "name": "testcluster"
+        }
     }
 ]

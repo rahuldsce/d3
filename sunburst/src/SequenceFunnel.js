@@ -57,22 +57,12 @@ export const updateElements = (data, onSwap) => {
     .text((d) => { return d.label; })
     .attr('fill', 'white');
 
-    // let tooltip2 = entering.append("div")
-    // .style("position", "absolute")
-    // .style("visibility", "hidden")
-    // .style("background-color", "white")
-    // .style("border", "solid")
-    // .style("border-width", "1px")
-    // .style("border-radius", "5px")
-    // .style("padding", "10px")
-    // .html("<p>I'm a tooltip written in HTML</p><img src='https://github.com/holtzy/D3-graph-gallery/blob/master/img/section/ArcSmal.png?raw=true'></img><br>Fancy<br><span style='font-size: 40px;'>Isn't it?</span>");
-
   entering.attr("transform", function (d, i) {
     let j = data.length - i
     return "translate(0," + (j * (b.h + b.s) + 10) + ")";
   });
 
-  entering.on("mouseover", function(){console.log('ddd')})
+  entering.on("mouseover", function(){})
   entering.style("cursor", "pointer").on('click', (e, d) => {
     if (swap === undefined) {
       swap = d
