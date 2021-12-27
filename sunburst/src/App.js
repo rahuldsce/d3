@@ -2,6 +2,7 @@ import React from 'react';
 import * as d3 from 'd3';
 import { formatData, sequence } from './format'
 import { initialize, updateElements } from './SequenceFunnel';
+import { Grid } from '@material-ui/core'
 import './index.css'
 
 const width = 732;
@@ -13,6 +14,10 @@ const arcVisible = (d) => {
 
 const labelVisible = (d) => {
     return d.y1 <= 3 && d.y0 >= 1 && (d.y1 - d.y0) * (d.x1 - d.x0) > 0.03;
+}
+
+const iconVisible = (d) => {
+    return d.y1 === 3 && d.y0 === 2 && (d.y1 - d.y0) * (d.x1 - d.x0) > 0.03;
 }
 
 const labelTransform = (d) => {
@@ -41,9 +46,7 @@ class App extends React.Component {
     render() {
         return (
             <React.Fragment>
-                <div align="center" style={{ width: '100%', backgroundColor: '#2A2C34' }}>
-                    <div id='chart' style={{ width: 800 }} ref={this.sbRef}></div>
-                </div>
+                <div id='chart' style={{ width:700, backgroundColor: '#2A2C34', padding: 10, borderRadius: 5 }} ref={this.sbRef}></div>
             </React.Fragment>
         );
     }
@@ -89,7 +92,7 @@ class App extends React.Component {
 
             icon.transition(t)
                 .attr("fill-opacity", d => {
-                    return +(labelVisible(d.target) && Boolean(d.data.errorexist))
+                    return +(iconVisible(d.target) && Boolean(d.data.errorexist))
                 })
                 .attrTween("transform", d => () => labelTransform(d.current));
         }
@@ -143,7 +146,8 @@ class App extends React.Component {
         path.on("mouseover", function (e, d) {
             if (d.children || d.data.error) {
                 tooltip.html(() => {
-                    return `<div style="font-size:10px;">
+                    return `<div style="font-size:10px;" align="left">
+                    <p>${'Name: ' + d.data.name}</p>
                     <p>${d.children ? 'Count: ' + format(d.children.length) : ''}</p>
                     <p>${d.data.error ? 'Error: ' + d.data.error : ''}</p>
                     </div>`
@@ -178,7 +182,7 @@ class App extends React.Component {
             .join("text")
             .attr("dy", "-0.5em")
             .attr("dx", "-1.9em")
-            .attr("fill-opacity", d => +(labelVisible(d) && Boolean(d.data.errorexist)))
+            .attr("fill-opacity", d => +(iconVisible(d) && Boolean(d.data.errorexist)))
             .attr("transform", d => labelTransform(d))
             .style('font-family', 'Linearicons-Free')
             .attr('font-size', '20px')
@@ -219,7 +223,7 @@ class App extends React.Component {
     componentDidMount() {
         //sunburst
         const dataset = formatData(sequence)
-        this.sequenceChart(sequence)
+        // this.sequenceChart(sequence)
         this.sunburstChart(dataset)
     }
 }

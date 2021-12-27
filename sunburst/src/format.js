@@ -51,7 +51,7 @@ const formatSequence = (order, index, inp, output) => {
             output.push(newout)
         }
 
-        newout.errorexist = newout.error ? newout.error : errorexist
+        newout.errorexist = newout.error ? newout.error : newout.errorexist ? newout.errorexist : errorexist
         return Boolean(newout.errorexist)
     }
 

@@ -18,7 +18,8 @@
             "name": "EU"
         },
         "cloudlet": {
-            "name": "automationDusseldorfCloudlet"
+            "name": "automationDusseldorfCloudlet",
+            "error":"cloudlet offline"
         },
         "operator": {
             "name": "TDG"
@@ -60,7 +61,8 @@
             "name": "EU"
         },
         "cloudlet": {
-            "name": "kafka_test_cloudlet2"
+            "name": "kafka_test_cloudlet2",
+            "error":"cloudlet offline"
         },
         "operator": {
             "name": "TDG"
@@ -111,8 +113,7 @@
             "name": "Delete"
         },
         "app": {
-            "name": "testtdg",
-            "error":"health issue"
+            "name": "testtdg"
         },
         "cluster": {
             "name": "testcluster"
