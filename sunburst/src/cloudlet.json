@@ -61,8 +61,7 @@
             "name": "EU"
         },
         "cloudlet": {
-            "name": "kafka_test_cloudlet2",
-            "error":"cloudlet offline"
+            "name": "kafka_test_cloudlet2"
         },
         "operator": {
             "name": "TDG"
@@ -113,7 +112,8 @@
             "name": "Delete"
         },
         "app": {
-            "name": "testtdg"
+            "name": "testtdg",
+            "error":"Health check failed"
         },
         "cluster": {
             "name": "testcluster"

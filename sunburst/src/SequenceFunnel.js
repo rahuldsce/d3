@@ -10,6 +10,7 @@ export const dataset = [
   { label: 'App Name', field: 'appname' },
 ]
 
+const width = 230
 //width;height;space;vertex
 const b = { w: 170, h: 25, s: 1, t: 10 };
 
@@ -23,14 +24,6 @@ const breadcrumbPoints = (d, i) => {
   points.push(b.t + j * b.t + "," + b.h);
 
   return points.join(" ");
-}
-
-export const initialize = (width) => {
-  d3.select('#sequence')
-    .append('svg')
-    .attr("width", width ? width : 650)
-    .attr("height", 200)
-    .attr("id", "trail");
 }
 
 export const updateElements = (data, onSwap) => {
@@ -62,7 +55,7 @@ export const updateElements = (data, onSwap) => {
     return "translate(0," + (j * (b.h + b.s) + 10) + ")";
   });
 
-  entering.on("mouseover", function(){})
+  entering.on("mouseover", function () { })
   entering.style("cursor", "pointer").on('click', (e, d) => {
     if (swap === undefined) {
       swap = d
@@ -86,29 +79,33 @@ class Sequence extends React.Component {
     super(props)
     this.state = {
     }
+    this.sbRef = React.createRef();
   }
 
   render() {
     return (
       <React.Fragment>
-        <div id='sequence'></div>
+        <div align="center">
+        <div id='sequence' ref={this.sbRef} style={{width:200}}></div>
+        </div>
       </React.Fragment>
     );
   }
 
+  initialize = () => {
+    d3.select(this.sbRef.current)
+      .append('svg')
+      .attr("id", "trail")
+      .attr("viewBox", [0, 0, width, width]);
+  }
+
   sequenceDiagram = () => {
-    function graph(selection) {
-      selection.each(function (data, i) {
-        initialize();
-        updateElements(dataset);
-      });
-    }
-    return graph;
+    this.initialize();
+    updateElements(dataset);
   }
 
   componentDidMount() {
-    var container = d3.select('#sequence');
-    container.append('svg').datum({}).call(this.sequenceDiagram());
+    this.sequenceDiagram()
   }
 }
 
